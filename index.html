@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Some shit</title>
+</head>
+<body>
+  <script>
+   let ws = new WebSocket("ws://localhost:8080");
+  ws.onmessage = ({data}) => {
+    console.log(data);
+  }
+  ws.onopen = () => ws.send('Text');
+  </script>
+</body>
+</html>
