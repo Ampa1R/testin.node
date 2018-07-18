@@ -62,7 +62,7 @@ app.get('/', function (req, res) {
   if (!db) {
     initDb(function(err){});
   }
-  var renderParams = {};
+  var renderParams = { user : "Debilenok xd"};
   if (db) {
     var col = db.collection('counts');
     // Create a document with request IP and current time of request
@@ -77,7 +77,6 @@ app.get('/', function (req, res) {
   } else {
       renderParams["pageCountMessage"] = null;
   }
-  renderParams["userHere"] = "Debilenok xd";
   res.render('index.html', renderParams);
 });
 
