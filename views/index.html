@@ -207,7 +207,7 @@ pre {
   overflow: auto;
   font-family: Menlo,Monaco,"Liberation Mono",Consolas,monospace !important;
 }
-.popuper{
+#popuper{
   position: absolute;
   top: 50%;
   left: 50%;
@@ -215,6 +215,7 @@ pre {
   width: 300px;
   height: 300px;
   background-color: #fff;
+  transform: translate(-50%, -50%);
 }
 .hidden{
   display: none;
@@ -227,11 +228,13 @@ pre {
 </head>
 <body>
   <script>
-    $("#open-pop").on("click", function(){
-      $(".popuper").toggleClass('hidden');
+    $(function(){
+      $("#open-pop").on("click", function(){
+        $("$popuper").toggleClass('hidden');
+      });
     });
   </script>
-<div class="popuper">
+<div id="popuper">
     <h1>Hello there</h1>
 </div>
 <section class='container'>
