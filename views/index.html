@@ -212,7 +212,8 @@ pre {
   top: 50%;
   left: 50%;
   z-index:100;
-  width: 300px;
+  width: 500px;
+  padding: 10px;
   height: 300px;
   background-color: #fff;
   transform: translate(-50%, -50%);
@@ -232,10 +233,14 @@ pre {
       $("#open-pop").on("click", function(){
         $("#popuper").toggleClass('hidden');
       });
+      $("body").on("click", function(){
+        $("#popuper").removeClass('hidden');
+      });
     });
   </script>
 <div id="popuper" class="hidden">
     <h1>Hello there</h1>
+    <p>what do you whant///</p>
 </div>
 <section class='container'>
           <hgroup>
@@ -317,10 +322,10 @@ $ git push</pre>
                           <tr><td>URL:</td><td><%= dbInfo.url %></td></tr>
                       </table>
                     </div>
+                    <p>Ip: <pre><%= adUser %></pre></p>
                 <% } else { %>
                    <span class="code" id="count-value">No database configured</span>
                    </p>
-                   <p>Ip: <pre><%= adUser %></pre></p>
                  <%} %>
           </section>
         </div>
