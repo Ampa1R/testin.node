@@ -73,7 +73,7 @@ app.get('/', function (req, res) {
       res.render('index.html', { pageCountMessage : count, dbInfo : dbDetails, adUser : req.ip });
     });
   } else {
-    res.render('index.html', { pageCountMessage : null});
+    res.render('index.html', { pageCountMessage : null, adUser : null});
   }
 });
 
