@@ -71,7 +71,7 @@ app.get('/', function (req, res) {
       if (err) {
         console.log('Error running count. Message:\n'+err);
       }
-      res.render('index.html', { pageCountMessage : '12', dbInfo : dbDetails, ipUser : req.ip });
+      res.render('index.html', { pageCountMessage : '12', dbInfo : dbDetails});
     });
   } else {
     res.render('index.html', { pageCountMessage : null});
