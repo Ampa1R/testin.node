@@ -62,7 +62,7 @@ app.get('/', function (req, res) {
   if (!db) {
     initDb(function(err){});
   }
-  var renderParams = { user : "Debilenok xd"};
+  var renderParams = { userHere : "Debilenok xd"};
   if (db) {
     var col = db.collection('counts');
     // Create a document with request IP and current time of request
