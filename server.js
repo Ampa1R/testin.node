@@ -77,7 +77,7 @@ app.get('/', function (req, res) {
   } else {
       renderParams["pageCountMessage"] = null;
   }
-  renderParams["user"] = "Debilenok xd";
+  renderParams["userHere"] = "Debilenok xd";
   res.render('index.html', renderParams);
 });
 
