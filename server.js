@@ -69,15 +69,11 @@ app.get('/', function (req, res) {
     col.count(function(err, count){
       if (err) {
         console.log('Error running count. Message:\n'+err);
-        res.render('index.html', {userHere : "Debilenok xd", pageCountMessage : count, dbInfo : dbDetails});
       }
-<<<<<<< HEAD
       res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-=======
->>>>>>> a74bf37eeffd9b12a00adf4d316156ea64d48ba9
     });
   } else {
-    res.render('index.html', {userHere : "Debilenok xd", pageCountMessage : null});
+    res.render('index.html', { pageCountMessage : null});
   }
 });
 
