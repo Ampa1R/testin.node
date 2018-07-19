@@ -55,7 +55,7 @@ var initDb = function(callback) {
     console.log('Connected to MongoDB at: %s', mongoURL);
   });
 };
-
+app.use(express.static(__dirname + '/views'));
 app.get('/', function (req, res) {
   // try to initialize the db on every request if it's not already
   // initialized.
