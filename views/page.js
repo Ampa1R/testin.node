@@ -1,8 +1,8 @@
 $(function(){
-  $("body").on("click", function(){
+  $("close-pop").on("click", function(){
     $("#popuper").addClass('hidden');
   });
   $("#open-pop").on("click", function(){
-    $("#popuper").toggleClass('hidden');
+    $("#popuper").removeClass('hidden');
   });
 });
