@@ -62,7 +62,6 @@ app.get('/', function (req, res) {
   if (!db) {
     initDb(function(err){});
   }
-  var renderParams = { userHere : "Debilenok xd"};
   if (db) {
     var col = db.collection('counts');
     // Create a document with request IP and current time of request
@@ -70,14 +69,12 @@ app.get('/', function (req, res) {
     col.count(function(err, count){
       if (err) {
         console.log('Error running count. Message:\n'+err);
+        res.render('index.html', {userHere : "Debilenok xd", pageCountMessage : count, dbInfo : dbDetails});
       }
-      renderParams["pageCountMessage"] = count;
-      renderParams["dbInfo"] = dbDetails;
     });
   } else {
-      renderParams["pageCountMessage"] = null;
+    res.render('index.html', {userHere : "Debilenok xd", pageCountMessage : null});
   }
-  res.render('index.html', renderParams);
 });
 
 app.get('/pagecount', function (req, res) {
