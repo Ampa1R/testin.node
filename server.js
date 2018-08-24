@@ -10,17 +10,22 @@ app.use(morgan('combined'));
 app.use('/views', express.static(__dirname + '/views'));
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
-    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
+    // ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
+    ip = "localhost",
+    // mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
+    mongoURL = "mongodb://lite_user:ULO6ryRzeUjq9HzQ@saint-cluster-shard-00-00-xkgnt.mongodb.net:27017,saint-cluster-shard-00-01-xkgnt.mongodb.net:27017,saint-cluster-shard-00-02-xkgnt.mongodb.net:27017/test?ssl=true&replicaSet=saint-cluster-shard-0&authSource=admin&retryWrites=true",
     mongoURLLabel = "";
 
 if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
   var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
       mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
       mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
-      mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
-      mongoPassword = process.env[mongoServiceName + '_PASSWORD']
-      mongoUser = process.env[mongoServiceName + '_USER'];
+      // mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
+      mongoDatabase = "lite_db",
+      // mongoPassword = process.env[mongoServiceName + '_PASSWORD']
+      mongoPassword = "ULO6ryRzeUjq9HzQ",
+      // mongoUser = process.env[mongoServiceName + '_USER'];
+      mongoUser = "lite_user";
 
   if (mongoHost && mongoPort && mongoDatabase) {
     mongoURLLabel = mongoURL = 'mongodb://';
@@ -50,7 +55,7 @@ var initDb = function(callback) {
 
     db = conn;
     dbDetails.databaseName = db.databaseName;
-    dbDetails.url = mongoURLLabel;
+    dbDetails.url = mongoURL;
     dbDetails.type = 'MongoDB';
 
     console.log('Connected to MongoDB at: %s', mongoURL);
@@ -89,6 +94,21 @@ app.get('/pagecount', function (req, res) {
     });
   } else {
     res.send('{ pageCount: -1 }');
+  }
+});
+app.post('/show', function (req, res) {
+  // try to initialize the db on every request if it's not already
+  // initialized.
+  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+    db.collection('counts').find({}).toArray(function(error, result){
+      if(error) throw(error);
+      res.json('{ result: true, resultArr: result}');
+    });
+  } else {
+    res.json('{ result: "Ошибка подключения к БД" }');
   }
 });
 
