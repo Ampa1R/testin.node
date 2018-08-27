@@ -1,12 +1,15 @@
 //  OpenShift sample Node application
 var express = require('express'),
     app     = express(),
-    morgan  = require('morgan');
+    morgan  = require('morgan'),
+    bodyParser  = require('body-parser'),
+    mongodb = require('mongodb');
 
 Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
 app.use(morgan('combined'));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use('/views', express.static(__dirname + '/views'));
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
@@ -44,7 +47,6 @@ var db = null,
 var initDb = function(callback) {
   if (mongoURL == null) return;
 
-  var mongodb = require('mongodb');
   if (mongodb == null) return;
 
   mongodb.connect(mongoURL, function(err, conn) {
@@ -75,7 +77,7 @@ app.get('/', function (req, res) {
       if (err) {
         console.log('Error running count. Message:\n'+err);
       }
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails, userName : 'Кретинчик :P'});
+      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails, userName: 'Кретинчик *))'});
     });
   } else {
     res.render('index.html', { pageCountMessage : null, userName : 'Дебилёнок x)'});
@@ -96,6 +98,20 @@ app.get('/pagecount', function (req, res) {
     res.send('{ pageCount: -1 }');
   }
 });
+app.post('/add', function (req, res) {
+  // try to initialize the db on every request if it's not already
+  // initialized.
+  if (!db) {
+    initDb(function(err){});
+  }
+    if (db) {
+    var col = db.collection('users');
+    console.log(req.body);
+    col.insert(req.body.user);
+  } else {
+    res.send('Ошибка подключения к БД');
+  }
+});
 app.post('/show', function (req, res) {
   // try to initialize the db on every request if it's not already
   // initialized.
@@ -103,14 +119,40 @@ app.post('/show', function (req, res) {
     initDb(function(err){});
   }
   if (db) {
-    db.collection('counts').find({}).toArray(function(error, result){
-      if(error) throw(error);
-      res.json('{ result: true, resultArr: result}');
+    var col = db.collection('users');
+    col.find({}).toArray(function(err, result){
+      if(err) throw(err);
+      var sendBack;
+      if(result.length > 0){
+        sendBack = "<tr><td>Name</td><td>Last Name</td><td>Age</td></tr>\n";
+        result.forEach(function(el, n){
+          console.log(el);
+          sendBack += "<tr><td>" + el["name"] + "</td><td>" + el["last_name"] + "</td><td>" + el["age"] + "</td><td><a class=\"remove-item\" href=\"#\" data-id=\"" + el["_id"] + "\">X</a></tr>\n";
+        });
+      }
+      else sendBack = "<b>Нет никого</b>"
+      res.send(sendBack);
     });
   } else {
-    res.json('{ result: "Ошибка подключения к БД" }');
+    res.send('<b>Ошибка подключения к БД</b>');
   }
 });
+app.post('/remove', function (req, res) {
+  // try to initialize the db on every request if it's not already
+  // initialized.
+  if (!db) {
+    initDb(function(err){});
+  }
+  if (db) {
+    var col = db.collection('users');
+    console.log(req.body.remove_id);
+    if(req.body.remove_id) col.deleteOne({_id: mongodb.ObjectId(req.body.remove_id)}, function(err, result) {if(err) throw(err);});
+    else res.send("Не удалось найти элемент");
+  } else {
+    res.send('<b>Ошибка подключения к БД</b>');
+  }
+});
+
 
 // error handling
 app.use(function(err, req, res, next){
